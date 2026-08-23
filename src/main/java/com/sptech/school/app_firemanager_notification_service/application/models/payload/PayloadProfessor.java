@@ -1,4 +1,4 @@
-package com.sptech.school.app_firemanager_notification_service.application.models;
+package com.sptech.school.app_firemanager_notification_service.application.models.payload;
 
 import com.sptech.school.app_firemanager_notification_service.domain.enums.StatusAgendamento;
 
