@@ -8,7 +8,9 @@ import com.sptech.school.app_firemanager_notification_service.application.models
 import com.sptech.school.app_firemanager_notification_service.domain.models.ConteudoNotificacao;
 import com.sptech.school.app_firemanager_notification_service.domain.models.DadosNotificacaoAluno;
 import com.sptech.school.app_firemanager_notification_service.domain.service.ConteudoNotificacaoBuilder;
+import org.springframework.stereotype.Service;
 
+@Service
 public class EnviarNotificacaoAlunoUseCase implements ExecutarNotificacaoAluno {
 
     private final ConteudoNotificacaoBuilder conteudoNotificacaoBuilder;
