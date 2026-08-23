@@ -37,7 +37,7 @@ public class TesteSmtpRunner implements CommandLineRunner {
                 LocalDate.now().plusDays(3),
                 LocalTime.of(14, 0),
                 StatusAgendamento.PENDENTE,
-                "luan.buchi.assis@gmail.com"
+                ""
         );
 
         useCase.executar(payload);
