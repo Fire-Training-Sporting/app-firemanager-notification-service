@@ -2,6 +2,7 @@ package com.sptech.school.app_firemanager_notification_service.application.useca
 
 import com.sptech.school.app_firemanager_notification_service.application.interfaces.entrada.ExecutarNotificacaoProfessor;
 import com.sptech.school.app_firemanager_notification_service.application.interfaces.saida.EmailSenderInterface;
+import com.sptech.school.app_firemanager_notification_service.application.interfaces.saida.RenderizarEmailProfessor;
 import com.sptech.school.app_firemanager_notification_service.application.models.Email;
 import com.sptech.school.app_firemanager_notification_service.application.models.payload.PayloadProfessor;
 import com.sptech.school.app_firemanager_notification_service.domain.models.ConteudoNotificacao;
@@ -12,10 +13,12 @@ public class EnviarNotificacaoProfessorUseCase implements ExecutarNotificacaoPro
 
     private final ConteudoNotificacaoBuilder conteudoNotificacaoBuilder;
     private final EmailSenderInterface emailSender;
+    private final RenderizarEmailProfessor renderizador;
 
-    public EnviarNotificacaoProfessorUseCase(ConteudoNotificacaoBuilder conteudoNotificacaoBuilder, EmailSenderInterface emailSender) {
+    public EnviarNotificacaoProfessorUseCase(ConteudoNotificacaoBuilder conteudoNotificacaoBuilder, EmailSenderInterface emailSender, RenderizarEmailProfessor renderizador) {
         this.conteudoNotificacaoBuilder = conteudoNotificacaoBuilder;
         this.emailSender = emailSender;
+        this.renderizador = renderizador;
     }
 
     @Override
@@ -33,10 +36,12 @@ public class EnviarNotificacaoProfessorUseCase implements ExecutarNotificacaoPro
 
         ConteudoNotificacao conteudo = conteudoNotificacaoBuilder.buildParaProfessor(payload.status(), dados);
 
+        String emailHtml = renderizador.renderizar(conteudo, dados);
+
         Email email = new Email(
                 payload.emailDestinatario(),
                 conteudo.assunto(),
-                conteudo.mensagem()
+                emailHtml
         );
 
         emailSender.enviar(email);
