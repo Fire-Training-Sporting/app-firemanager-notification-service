@@ -16,10 +16,11 @@ public class EmailSenderService implements EmailSenderInterface {
     private final JavaMailSender javaMailSender;
 
     @Value("${spring.mail.username}")
-    private String emailRemetente;
+    private final String emailRemetente;
 
-    public EmailSenderService(JavaMailSender javaMailSender) {
+    public EmailSenderService(JavaMailSender javaMailSender, @Value("${spring.mail.username}") String emailRemetente) {
         this.javaMailSender = javaMailSender;
+        this.emailRemetente = emailRemetente;
     }
 
     @Override
