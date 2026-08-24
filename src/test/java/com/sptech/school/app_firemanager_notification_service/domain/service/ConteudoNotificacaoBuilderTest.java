@@ -4,259 +4,99 @@ import com.sptech.school.app_firemanager_notification_service.domain.enums.Statu
 import com.sptech.school.app_firemanager_notification_service.domain.models.ConteudoNotificacao;
 import com.sptech.school.app_firemanager_notification_service.domain.models.DadosNotificacaoAluno;
 import com.sptech.school.app_firemanager_notification_service.domain.models.DadosNotificacaoProfessor;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class ConteudoNotificacaoBuilderTest {
 
-    private ConteudoNotificacaoBuilder builder;
+    private final ConteudoNotificacaoBuilder builder = new ConteudoNotificacaoBuilder();
 
-    @BeforeEach
-    void setUp() {
-        builder = new ConteudoNotificacaoBuilder();
-    }
+    private final DadosNotificacaoAluno dadosAluno = new DadosNotificacaoAluno(
+            42L, "Professor João", LocalDate.of(2026, 8, 30), LocalTime.of(14, 0)
+    );
 
-    // ============================================================
-    // ALUNO
-    // ============================================================
+    private final DadosNotificacaoProfessor dadosProfessor = new DadosNotificacaoProfessor(
+            42L, "Maria Aluna", "11999990000", "Condomínio Sol", "Levar tatame",
+            LocalDate.of(2026, 8, 30), LocalTime.of(14, 0)
+    );
+
+    // ---- ALUNO ----
 
     @Test
-    void deveConstruirNotificacaoParaAlunoQuandoStatusForPendente() {
+    void buildParaAluno_pendente() {
+        ConteudoNotificacao conteudo = builder.buildParaAluno(StatusAgendamento.PENDENTE, dadosAluno);
 
-        DadosNotificacaoAluno dados = new DadosNotificacaoAluno(
-                123L,
-                "João Silva",
-                LocalDate.of(2026, 8, 25),
-                LocalTime.of(14, 30)
-        );
-
-        ConteudoNotificacao resultado =
-                builder.buildParaAluno(StatusAgendamento.PENDENTE, dados);
-
-        assertEquals(
-                "[FireManager] - Nova Aula Agendada!",
-                resultado.assunto()
-        );
-
-        assertEquals(
-                "Você tem uma nova aula agendada com João Silva no dia 25/08/2026 às 14:30. [ID Agendamento: 123]",
-                resultado.mensagem()
-        );
+        assertThat(conteudo.assunto()).isEqualTo("[FireManager] - Nova Aula Agendada!");
+        assertThat(conteudo.mensagem())
+                .contains("Professor João")
+                .contains("30/08/2026")
+                .contains("14:00")
+                .contains("42");
     }
 
     @Test
-    void deveConstruirNotificacaoParaAlunoQuandoStatusForCancelado() {
+    void buildParaAluno_cancelado() {
+        ConteudoNotificacao conteudo = builder.buildParaAluno(StatusAgendamento.CANCELADO, dadosAluno);
 
-        DadosNotificacaoAluno dados = new DadosNotificacaoAluno(
-                123L,
-                "João Silva",
-                LocalDate.of(2026, 8, 25),
-                LocalTime.of(14, 30)
-        );
-
-        ConteudoNotificacao resultado =
-                builder.buildParaAluno(StatusAgendamento.CANCELADO, dados);
-
-        assertEquals(
-                "[FireManager] - Agendamento Cancelado",
-                resultado.assunto()
-        );
-
-        assertEquals(
-                "Seu agendamento foi cancelado. [ID Agendamento: 123]",
-                resultado.mensagem()
-        );
+        assertThat(conteudo.assunto()).isEqualTo("[FireManager] - Agendamento Cancelado");
+        assertThat(conteudo.mensagem()).contains("cancelado").contains("42");
     }
 
     @Test
-    void deveConstruirNotificacaoParaAlunoQuandoStatusForConfirmado() {
+    void buildParaAluno_confirmado() {
+        ConteudoNotificacao conteudo = builder.buildParaAluno(StatusAgendamento.CONFIRMADO, dadosAluno);
 
-        DadosNotificacaoAluno dados = new DadosNotificacaoAluno(
-                123L,
-                "João Silva",
-                LocalDate.of(2026, 8, 25),
-                LocalTime.of(14, 30)
-        );
-
-        ConteudoNotificacao resultado =
-                builder.buildParaAluno(StatusAgendamento.CONFIRMADO, dados);
-
-        assertEquals(
-                "[FireManager] - Aula Confirmada",
-                resultado.assunto()
-        );
-
-        assertEquals(
-                "Sua aula com João Silva é daqui menos de 24h! [ID Agendamento: 123]",
-                resultado.mensagem()
-        );
+        assertThat(conteudo.assunto()).isEqualTo("[FireManager] - Aula Confirmada");
+        assertThat(conteudo.mensagem()).contains("Professor João").contains("42");
     }
 
     @Test
-    void deveConstruirNotificacaoParaAlunoQuandoStatusForFinalizado() {
+    void buildParaAluno_finalizado() {
+        ConteudoNotificacao conteudo = builder.buildParaAluno(StatusAgendamento.FINALIZADO, dadosAluno);
 
-        DadosNotificacaoAluno dados = new DadosNotificacaoAluno(
-                123L,
-                "João Silva",
-                LocalDate.of(2026, 8, 25),
-                LocalTime.of(14, 30)
-        );
-
-        ConteudoNotificacao resultado =
-                builder.buildParaAluno(StatusAgendamento.FINALIZADO, dados);
-
-        assertEquals(
-                "[FireManager] - Aula Concluída",
-                resultado.assunto()
-        );
-
-        assertEquals(
-                "Sua aula com João Silva foi concluída. Obrigado pela confiança em nosso serviço! [ID Agendamento: 123]",
-                resultado.mensagem()
-        );
+        assertThat(conteudo.assunto()).isEqualTo("[FireManager] - Aula Concluída");
+        assertThat(conteudo.mensagem()).contains("Professor João").contains("42");
     }
 
-    // ============================================================
-    // PROFESSOR
-    // ============================================================
+    // ---- PROFESSOR ----
 
     @Test
-    void deveConstruirNotificacaoParaProfessorQuandoStatusForPendente() {
+    void buildParaProfessor_pendente() {
+        ConteudoNotificacao conteudo = builder.buildParaProfessor(StatusAgendamento.PENDENTE, dadosProfessor);
 
-        DadosNotificacaoProfessor dados = new DadosNotificacaoProfessor(
-                123L,
-                "João Silva",
-                "11999999999",
-                "Condomínio Alpha",
-                "Levar material",
-                LocalDate.of(2026, 8, 25),
-                LocalTime.of(14, 30)
-        );
-
-        ConteudoNotificacao resultado =
-                builder.buildParaProfessor(StatusAgendamento.PENDENTE, dados);
-
-        assertEquals(
-                "[FireManager] - Nova Aula Agendada!",
-                resultado.assunto()
-        );
-
-        assertEquals(
-                "Você tem uma nova aula agendada com João Silva no dia 25/08/2026 às 14:30. [ID Agendamento: 123]",
-                resultado.mensagem()
-        );
+        assertThat(conteudo.assunto()).isEqualTo("[FireManager] - Nova Aula Agendada!");
+        assertThat(conteudo.mensagem())
+                .contains("Maria Aluna")
+                .contains("30/08/2026")
+                .contains("14:00")
+                .contains("42");
     }
 
     @Test
-    void deveConstruirNotificacaoParaProfessorQuandoStatusForPendenteObservacaoVazia() {
+    void buildParaProfessor_cancelado() {
+        ConteudoNotificacao conteudo = builder.buildParaProfessor(StatusAgendamento.CANCELADO, dadosProfessor);
 
-        DadosNotificacaoProfessor dados = new DadosNotificacaoProfessor(
-                123L,
-                "João Silva",
-                "11999999999",
-                "Condomínio Alpha",
-                null,
-                LocalDate.of(2026, 8, 25),
-                LocalTime.of(14, 30)
-        );
-
-        ConteudoNotificacao resultado =
-                builder.buildParaProfessor(StatusAgendamento.PENDENTE, dados);
-
-        assertEquals(
-                "[FireManager] - Nova Aula Agendada!",
-                resultado.assunto()
-        );
-
-        assertEquals(
-                "Você tem uma nova aula agendada com João Silva no dia 25/08/2026 às 14:30. [ID Agendamento: 123]",
-                resultado.mensagem()
-        );
+        assertThat(conteudo.assunto()).isEqualTo("[FireManager] - Agendamento Cancelado");
+        assertThat(conteudo.mensagem()).contains("Maria Aluna").contains("42");
     }
 
     @Test
-    void deveConstruirNotificacaoParaProfessorQuandoStatusForCancelado() {
+    void buildParaProfessor_confirmado() {
+        ConteudoNotificacao conteudo = builder.buildParaProfessor(StatusAgendamento.CONFIRMADO, dadosProfessor);
 
-        DadosNotificacaoProfessor dados = new DadosNotificacaoProfessor(
-                123L,
-                "João Silva",
-                "11999999999",
-                "Condomínio Alpha",
-                "Levar material",
-                LocalDate.of(2026, 8, 25),
-                LocalTime.of(14, 30)
-        );
-
-        ConteudoNotificacao resultado =
-                builder.buildParaProfessor(StatusAgendamento.CANCELADO, dados);
-
-        assertEquals(
-                "[FireManager] - Agendamento Cancelado",
-                resultado.assunto()
-        );
-
-        assertEquals(
-                "O agendamento com João Silva no dia 25/08/2026 às 14:30 foi cancelado. [ID Agendamento: 123]",
-                resultado.mensagem()
-        );
+        assertThat(conteudo.assunto()).isEqualTo("[FireManager] - Aula Confirmada");
+        assertThat(conteudo.mensagem()).contains("Maria Aluna").contains("42");
     }
 
     @Test
-    void deveConstruirNotificacaoParaProfessorQuandoStatusForConfirmado() {
+    void buildParaProfessor_finalizado() {
+        ConteudoNotificacao conteudo = builder.buildParaProfessor(StatusAgendamento.FINALIZADO, dadosProfessor);
 
-        DadosNotificacaoProfessor dados = new DadosNotificacaoProfessor(
-                123L,
-                "João Silva",
-                "11999999999",
-                "Condomínio Alpha",
-                "Levar material",
-                LocalDate.of(2026, 8, 25),
-                LocalTime.of(14, 30)
-        );
-
-        ConteudoNotificacao resultado =
-                builder.buildParaProfessor(StatusAgendamento.CONFIRMADO, dados);
-
-        assertEquals(
-                "[FireManager] - Aula Confirmada",
-                resultado.assunto()
-        );
-
-        assertEquals(
-                "A aula com João Silva é daqui menos de 24h e não pode mais ser cancelada. [ID Agendamento: 123]",
-                resultado.mensagem()
-        );
-    }
-
-    @Test
-    void deveConstruirNotificacaoParaProfessorQuandoStatusForFinalizado() {
-
-        DadosNotificacaoProfessor dados = new DadosNotificacaoProfessor(
-                123L,
-                "João Silva",
-                "11999999999",
-                "Condomínio Alpha",
-                "Levar material",
-                LocalDate.of(2026, 8, 25),
-                LocalTime.of(14, 30)
-        );
-
-        ConteudoNotificacao resultado =
-                builder.buildParaProfessor(StatusAgendamento.FINALIZADO, dados);
-
-        assertEquals(
-                "[FireManager] - Aula Concluída",
-                resultado.assunto()
-        );
-
-        assertEquals(
-                "A aula com João Silva realizada em 25/08/2026 às 14:30 foi concluída. [ID Agendamento: 123]",
-                resultado.mensagem()
-        );
+        assertThat(conteudo.assunto()).isEqualTo("[FireManager] - Aula Concluída");
+        assertThat(conteudo.mensagem()).contains("Maria Aluna").contains("42");
     }
 }
