@@ -42,5 +42,7 @@ public class EnviarNotificacaoAlunoUseCase implements ExecutarNotificacaoAluno {
         );
 
         emailSender.enviar(email);
+
+        System.out.println("Email enviado para aluno: " + payload.emailDestinatario());
     }
 }

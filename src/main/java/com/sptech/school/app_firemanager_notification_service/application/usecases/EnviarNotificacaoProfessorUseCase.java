@@ -45,5 +45,7 @@ public class EnviarNotificacaoProfessorUseCase implements ExecutarNotificacaoPro
         );
 
         emailSender.enviar(email);
+
+        System.out.println("Email enviado para aluno: " + payload.emailDestinatario());
     }
 }
