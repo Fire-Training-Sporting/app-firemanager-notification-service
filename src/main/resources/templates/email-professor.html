@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body style="font-family: Arial, sans-serif; background-color: #f2f2f2; padding: 20px;">
+<div style="max-width: 600px; margin: auto; background-color: #ffffff; padding: 25px; border-radius: 10px; border-top: 6px solid #ff6600; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+
+    <h2 style="color: #ff6600; text-align: center;">Olá, Professor(a)!</h2>
+
+    <p style="font-size: 16px; color: #333333; text-align: center;" th:text="${mensagem}">
+        Mensagem de status
+    </p>
+
+    <div style="background-color: #f9f9f9; padding: 15px; border-radius: 8px; margin: 15px 0; text-align: left;">
+        <p><strong>Aluno(a):</strong> <span th:text="${nomeAluno}">-</span></p>
+        <p><strong>Telefone:</strong> <span th:text="${telefone}">-</span></p>
+        <p><strong>Condomínio:</strong> <span th:text="${condominio}">-</span></p>
+        <p><strong>Observação:</strong> <span th:text="${observacao}">-</span></p>
+        <p><strong>Data:</strong> <span th:text="${data}">-</span></p>
+        <p><strong>Hora:</strong> <span th:text="${hora}">-</span></p>
+    </div>
+
+    <p style="text-align: center; font-size: 14px; color: #666666;">
+        Atenciosamente, Fire Training
+    </p>
+
+</div>
+</body>
+</html>
