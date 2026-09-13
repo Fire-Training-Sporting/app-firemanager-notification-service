@@ -8,12 +8,15 @@ import com.sptech.school.app_firemanager_notification_service.application.models
 import com.sptech.school.app_firemanager_notification_service.domain.models.ConteudoNotificacao;
 import com.sptech.school.app_firemanager_notification_service.domain.models.DadosNotificacaoAluno;
 import com.sptech.school.app_firemanager_notification_service.domain.service.ConteudoNotificacaoBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class EnviarNotificacaoAlunoUseCase implements ExecutarNotificacaoAluno {
 
     private final ConteudoNotificacaoBuilder conteudoNotificacaoBuilder;
     private final EmailSenderInterface emailSender;
     private final RenderizarEmailAluno renderizador;
+    private static final Logger log = LoggerFactory.getLogger(EnviarNotificacaoAlunoUseCase.class);
 
     public EnviarNotificacaoAlunoUseCase(ConteudoNotificacaoBuilder conteudoNotificacaoBuilder, EmailSenderInterface emailSender, RenderizarEmailAluno renderizador) {
         this.conteudoNotificacaoBuilder = conteudoNotificacaoBuilder;
@@ -43,6 +46,7 @@ public class EnviarNotificacaoAlunoUseCase implements ExecutarNotificacaoAluno {
 
         emailSender.enviar(email);
 
-        System.out.println("Email enviado para aluno: " + payload.emailDestinatario());
+        log.info("Notificação de aluno enviada para o SMTP - destinatario={}, assunto='{}'",
+                email.destinatario(), email.assunto());
     }
 }
