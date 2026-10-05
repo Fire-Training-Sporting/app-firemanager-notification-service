@@ -16,6 +16,36 @@ public class RabbitMQInitializer implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        rabbitAdmin.initialize();
+        int maxTentativas = 10;
+        int esperaMs = 3000;
+
+        for (int tentativa = 1; tentativa <= maxTentativas; tentativa++) {
+            try {
+                rabbitAdmin.initialize();
+
+                System.out.println("RabbitMQ inicializado com sucesso.");
+                return;
+
+            } catch (Exception e) {
+                System.out.println(
+                        "RabbitMQ ainda não está disponível. "
+                                + "Tentativa " + tentativa + "/" + maxTentativas
+                );
+
+                if (tentativa == maxTentativas) {
+                    throw e;
+                }
+
+                try {
+                    Thread.sleep(esperaMs);
+                } catch (InterruptedException interruptedException) {
+                    Thread.currentThread().interrupt();
+                    throw new IllegalStateException(
+                            "Thread interrompida durante inicialização do RabbitMQ",
+                            interruptedException
+                    );
+                }
+            }
+        }
     }
 }
