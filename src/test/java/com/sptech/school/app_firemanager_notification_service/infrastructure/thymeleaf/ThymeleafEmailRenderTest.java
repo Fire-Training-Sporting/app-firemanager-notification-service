@@ -78,4 +78,20 @@ class ThymeleafEmailRendererTest {
         assertThat(context.getVariable("data")).isEqualTo("30/08/2026");
         assertThat(context.getVariable("hora")).isEqualTo("14:00");
     }
+
+    @Test
+    void deveRenderizarTemplateDeRecuperacaoComLinkEValidade() {
+        when(templateEngine.process(eq("email-recuperacao-senha"), any(Context.class)))
+                .thenReturn("<html>recuperacao renderizada</html>");
+
+        String linkRedefinicao = "https://app.exemplo.com/reset-password?token=TOKEN";
+        String resultado = renderer.renderizar(linkRedefinicao, 30);
+
+        assertThat(resultado).isEqualTo("<html>recuperacao renderizada</html>");
+
+        ArgumentCaptor<Context> contextCaptor = ArgumentCaptor.forClass(Context.class);
+        verify(templateEngine).process(eq("email-recuperacao-senha"), contextCaptor.capture());
+        assertThat(contextCaptor.getValue().getVariable("linkRedefinicao")).isEqualTo(linkRedefinicao);
+        assertThat(contextCaptor.getValue().getVariable("validadeMinutos")).isEqualTo(30);
+    }
 }

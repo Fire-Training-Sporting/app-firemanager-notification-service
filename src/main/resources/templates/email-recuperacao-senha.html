@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body style="font-family: Arial, sans-serif; background-color: #f2f2f2; padding: 20px;">
+<div style="max-width: 600px; margin: auto; background-color: #ffffff; padding: 25px; border-radius: 10px; border-top: 6px solid #ff6600; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+    <h2 style="color: #ff6600; text-align: center;">Recuperação de senha</h2>
+    <p style="font-size: 16px; color: #333333; text-align: center;">
+        Recebemos uma solicitação para redefinir a senha da sua conta FireManager.
+    </p>
+    <p style="text-align: center; margin: 25px 0;">
+        <a th:href="${linkRedefinicao}"
+           style="background-color: #ff6600; color: #ffffff; padding: 12px 20px; text-decoration: none; border-radius: 5px;">
+            Redefinir minha senha
+        </a>
+    </p>
+    <p style="font-size: 14px; color: #666666; text-align: center;">
+        Este link expira em <span th:text="${validadeMinutos}">30</span> minutos.
+    </p>
+    <p style="font-size: 14px; color: #666666; text-align: center;">
+        Se você não solicitou a recuperação, ignore este e-mail.
+    </p>
+</div>
+</body>
+</html>

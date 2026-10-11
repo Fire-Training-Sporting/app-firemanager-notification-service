@@ -15,9 +15,11 @@ public class RabbitMQConfig {
 
     public static final String ROUTING_KEY_ALUNO = "notificacao.aluno";
     public static final String ROUTING_KEY_PROFESSOR = "notificacao.professor";
+    public static final String ROUTING_KEY_RECUPERACAO_SENHA = "notificacao.recuperacao-senha";
 
     public static final String FILA_NOTIFICACAO_ALUNO = "fila.notificacao.aluno";
     public static final String FILA_NOTIFICACAO_PROFESSOR = "fila.notificacao.professor";
+    public static final String FILA_NOTIFICACAO_RECUPERACAO_SENHA = "fila.notificacao.recuperacao-senha";
 
     @Bean
     public RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory) {
@@ -49,6 +51,13 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Queue filaNotificacaoRecuperacaoSenha() {
+        return QueueBuilder
+                .durable(FILA_NOTIFICACAO_RECUPERACAO_SENHA)
+                .build();
+    }
+
+    @Bean
     public Binding bindingAluno(Queue filaNotificacaoAluno, DirectExchange exchangeNotificacao) {
         return BindingBuilder
                 .bind(filaNotificacaoAluno)
@@ -62,5 +71,16 @@ public class RabbitMQConfig {
                 .bind(filaNotificacaoProfessor)
                 .to(exchangeNotificacao)
                 .with(ROUTING_KEY_PROFESSOR);
+    }
+
+    @Bean
+    public Binding bindingRecuperacaoSenha(
+            Queue filaNotificacaoRecuperacaoSenha,
+            DirectExchange exchangeNotificacao
+    ) {
+        return BindingBuilder
+                .bind(filaNotificacaoRecuperacaoSenha)
+                .to(exchangeNotificacao)
+                .with(ROUTING_KEY_RECUPERACAO_SENHA);
     }
 }
