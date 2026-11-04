@@ -2,11 +2,14 @@ package com.sptech.school.app_firemanager_notification_service.infrastructure.co
 
 import com.sptech.school.app_firemanager_notification_service.application.interfaces.entrada.ExecutarNotificacaoAluno;
 import com.sptech.school.app_firemanager_notification_service.application.interfaces.entrada.ExecutarNotificacaoProfessor;
+import com.sptech.school.app_firemanager_notification_service.application.interfaces.entrada.ExecutarNotificacaoRecuperacaoSenha;
 import com.sptech.school.app_firemanager_notification_service.application.interfaces.saida.EmailSenderInterface;
 import com.sptech.school.app_firemanager_notification_service.application.interfaces.saida.RenderizarEmailAluno;
 import com.sptech.school.app_firemanager_notification_service.application.interfaces.saida.RenderizarEmailProfessor;
+import com.sptech.school.app_firemanager_notification_service.application.interfaces.saida.RenderizarEmailRecuperacaoSenha;
 import com.sptech.school.app_firemanager_notification_service.application.usecases.EnviarNotificacaoAlunoUseCase;
 import com.sptech.school.app_firemanager_notification_service.application.usecases.EnviarNotificacaoProfessorUseCase;
+import com.sptech.school.app_firemanager_notification_service.application.usecases.EnviarNotificacaoRecuperacaoSenhaUseCase;
 import com.sptech.school.app_firemanager_notification_service.domain.service.ConteudoNotificacaoBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,5 +39,13 @@ public class UseCaseConfig {
     ) {
 
         return new EnviarNotificacaoProfessorUseCase(builder, sender, renderizador);
+    }
+
+    @Bean
+    public ExecutarNotificacaoRecuperacaoSenha executarNotificacaoRecuperacaoSenha(
+            EmailSenderInterface sender,
+            RenderizarEmailRecuperacaoSenha renderizador
+    ) {
+        return new EnviarNotificacaoRecuperacaoSenhaUseCase(sender, renderizador);
     }
 }
