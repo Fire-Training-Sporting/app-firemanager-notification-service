@@ -2,6 +2,7 @@ package com.sptech.school.app_firemanager_notification_service.infrastructure.th
 
 import com.sptech.school.app_firemanager_notification_service.application.interfaces.saida.RenderizarEmailAluno;
 import com.sptech.school.app_firemanager_notification_service.application.interfaces.saida.RenderizarEmailProfessor;
+import com.sptech.school.app_firemanager_notification_service.application.interfaces.saida.RenderizarEmailRecuperacaoSenha;
 import com.sptech.school.app_firemanager_notification_service.domain.models.ConteudoNotificacao;
 import com.sptech.school.app_firemanager_notification_service.domain.models.DadosNotificacaoAluno;
 import com.sptech.school.app_firemanager_notification_service.domain.models.DadosNotificacaoProfessor;
@@ -12,7 +13,7 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
 @Service
-public class ThymeleafEmailRender implements RenderizarEmailAluno, RenderizarEmailProfessor {
+public class ThymeleafEmailRender implements RenderizarEmailAluno, RenderizarEmailProfessor, RenderizarEmailRecuperacaoSenha {
 
     private final SpringTemplateEngine template;
     private static final Logger log = LoggerFactory.getLogger(ThymeleafEmailRender.class);
@@ -53,5 +54,14 @@ public class ThymeleafEmailRender implements RenderizarEmailAluno, RenderizarEma
             log.error("Falha ao renderizar template 'email-professor' - agendamentoId={}", dados.agendamentoId(), e);
             throw e;
         }
+    }
+
+    @Override
+    public String renderizar(String linkRedefinicao, int validadeMinutos) {
+        Context context = new Context();
+        context.setVariable("linkRedefinicao", linkRedefinicao);
+        context.setVariable("validadeMinutos", validadeMinutos);
+
+        return template.process("email-recuperacao-senha", context);
     }
 }
